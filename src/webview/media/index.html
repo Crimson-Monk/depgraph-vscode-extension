@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DepGraph Visualizer</title>
+  <link rel="stylesheet" href="main.css">
+</head>
+<body>
+  <!-- Header Toolbar -->
+  <header class="toolbar">
+    <div class="toolbar-group">
+      <div class="toolbar-title">
+        ⚡ <span>DepGraph</span> Visualizer
+      </div>
+      
+      <button id="btnLayoutDag" class="btn active" title="Tiered DAG Layout">
+        📊 DAG
+      </button>
+      <button id="btnLayoutConcentric" class="btn" title="Concentric Layout">
+        🎯 Concentric
+      </button>
+      <button id="btnLayoutCose" class="btn" title="Force-Directed Layout">
+        🧲 Force
+      </button>
+    </div>
+
+    <div class="toolbar-group">
+      <input type="text" id="searchInput" class="search-input" placeholder="Search nodes or files...">
+      
+      <select id="typeFilter" class="select-dropdown">
+        <option value="all">All Types</option>
+        <option value="function">Function</option>
+        <option value="class">Class</option>
+        <option value="api">API Endpoint</option>
+        <option value="interface">Interface</option>
+        <option value="component">Component</option>
+      </select>
+
+      <button id="btnGitImpact" class="btn" title="Analyze Uncommitted Git Changes">
+        🔀 Git Impact
+      </button>
+
+      <button id="btnRescan" class="btn btn-primary" title="Rescan Workspace Dependencies">
+        🔄 Rescan
+      </button>
+    </div>
+  </header>
+
+  <!-- Canvas Container -->
+  <main class="visualizer-container">
+    <div id="cy"></div>
+
+    <!-- Side Drawer Inspector -->
+    <aside id="drawer" class="drawer">
+      <div class="drawer-header">
+        <div class="drawer-title" id="drawerTitle">
+          🔍 Entity Inspector
+        </div>
+        <button id="btnCloseDrawer" class="close-btn">&times;</button>
+      </div>
+
+      <div class="drawer-content" id="drawerContent">
+        <!-- Default Empty State or Node Inspector will render here -->
+        <div class="info-card">
+          <h4>Node Overview</h4>
+          <div class="info-grid">
+            <div class="info-stat">
+              <span class="stat-label">Name</span>
+              <span class="stat-value" id="statName">-</span>
+            </div>
+            <div class="info-stat">
+              <span class="stat-label">Type</span>
+              <span class="stat-value" id="statType">-</span>
+            </div>
+            <div class="info-stat">
+              <span class="stat-label">Centrality Score</span>
+              <span class="stat-value" id="statCentrality">-</span>
+            </div>
+            <div class="info-stat">
+              <span class="stat-label">Complexity</span>
+              <span class="stat-value" id="statComplexity">-</span>
+            </div>
+            <div class="info-stat">
+              <span class="stat-label">In-Degree</span>
+              <span class="stat-value" id="statInDegree">-</span>
+            </div>
+            <div class="info-stat">
+              <span class="stat-label">Out-Degree</span>
+              <span class="stat-value" id="statOutDegree">-</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="info-card">
+          <h4>Source File</h4>
+          <p id="statFile" style="font-size:11px; word-break:break-all; opacity:0.8;">-</p>
+          <button id="btnJumpToSource" class="btn btn-primary" style="margin-top:10px; width:100%; justify-content:center;">
+            📂 Jump to Source Code
+          </button>
+          <button id="btnSimulateImpact" class="btn" style="margin-top:6px; width:100%; justify-content:center;">
+            💥 Simulate Impact
+          </button>
+        </div>
+
+        <!-- Impact Simulation Section -->
+        <div id="impactSection" class="info-card" style="display:none;">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+            <h4 style="margin:0;">Impact Simulation</h4>
+            <span id="riskBadge" class="badge badge-low">LOW</span>
+          </div>
+
+          <div class="info-stat">
+            <span class="stat-label">Risk Score</span>
+            <span class="stat-value" id="statRiskScore">0 / 100</span>
+            <div class="progress-bar-bg">
+              <div id="riskGaugeFill" class="progress-bar-fill"></div>
+            </div>
+          </div>
+
+          <div style="margin-top:12px;">
+            <h4 style="margin-bottom:6px;">Affected Downstream Nodes</h4>
+            <ul id="affectedList" class="affected-list"></ul>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Legend Bar -->
+    <div class="legend-bar">
+      <div class="legend-item"><div class="legend-dot function"></div> Function</div>
+      <div class="legend-item"><div class="legend-dot class"></div> Class</div>
+      <div class="legend-item"><div class="legend-dot api"></div> API Route</div>
+      <div class="legend-item"><div class="legend-dot interface"></div> Interface</div>
+      <div class="legend-item" style="margin-left:8px; opacity:0.7;">Double-click node to open source line</div>
+    </div>
+  </main>
+
+  <script src="cytoscape.min.js"></script>
+  <script src="visualizer.js"></script>
+</body>
+</html>

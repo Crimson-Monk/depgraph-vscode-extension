@@ -1,0 +1,10 @@
+.gitignore
+.vscode/**
+src/**
+tsconfig.json
+esbuild.js
+*.vsix
+**.map
+node_modules/**
+!node_modules/depgraph-core/**
+!node_modules/cytoscape/dist/cytoscape.min.js
