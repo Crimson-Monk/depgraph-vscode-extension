@@ -1,0 +1,110 @@
+{
+  "name": "depgraph-vscode",
+  "displayName": "DepGraph - Dependency & Impact Visualizer",
+  "description": "Interactive Dependency Tree, Complexity Metrics & Blast Radius Impact Simulation for JS/TS/Py/Go powered by depgraph-core.",
+  "version": "0.1.0",
+  "publisher": "depgraph",
+  "engines": {
+    "vscode": "^1.80.0"
+  },
+  "categories": [
+    "Visualization",
+    "Linters",
+    "Other"
+  ],
+  "activationEvents": [
+    "onLanguage:javascript",
+    "onLanguage:typescript",
+    "onLanguage:javascriptreact",
+    "onLanguage:typescriptreact",
+    "onLanguage:python",
+    "onLanguage:go",
+    "onCommand:depgraph.openVisualizer"
+  ],
+  "main": "./dist/extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "depgraph.openVisualizer",
+        "title": "DepGraph: Open Visualizer",
+        "category": "DepGraph"
+      },
+      {
+        "command": "depgraph.simulateImpact",
+        "title": "DepGraph: Simulate Impact of Current Entity",
+        "category": "DepGraph"
+      },
+      {
+        "command": "depgraph.analyzeGitImpact",
+        "title": "DepGraph: Analyze Uncommitted Changes (Git Impact)",
+        "category": "DepGraph"
+      },
+      {
+        "command": "depgraph.rescanWorkspace",
+        "title": "DepGraph: Rescan Workspace Dependencies",
+        "category": "DepGraph"
+      }
+    ],
+    "menus": {
+      "editor/context": [
+        {
+          "command": "depgraph.simulateImpact",
+          "group": "depgraph@1"
+        }
+      ],
+      "commandPalette": [
+        {
+          "command": "depgraph.openVisualizer"
+        },
+        {
+          "command": "depgraph.simulateImpact"
+        },
+        {
+          "command": "depgraph.analyzeGitImpact"
+        },
+        {
+          "command": "depgraph.rescanWorkspace"
+        }
+      ]
+    },
+    "configuration": {
+      "title": "DepGraph",
+      "properties": {
+        "depgraph.autoRescanOnSave": {
+          "type": "boolean",
+          "default": true,
+          "description": "Automatically rescan workspace dependencies on file save."
+        },
+        "depgraph.autoRescanDebounceMs": {
+          "type": "number",
+          "default": 2000,
+          "description": "Debounce delay in milliseconds for auto-rescan on file save."
+        },
+        "depgraph.enableCodeLens": {
+          "type": "boolean",
+          "default": true,
+          "description": "Enable in-editor CodeLens metrics annotations above functions and classes."
+        }
+      }
+    }
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run build",
+    "build": "node api.js && node esbuild.js --production",
+    "watch": "node esbuild.js --watch",
+    "compile": "tsc --noEmit",
+    "test": "tsx src/__tests__/runner.test.ts"
+  },
+  "dependencies": {
+    "cytoscape": "^3.30.4",
+    "depgraph-core": "^1.0.3"
+  },
+  "devDependencies": {
+    "@types/cytoscape": "^3.21.9",
+    "@types/node": "^20.11.0",
+    "@types/vscode": "^1.80.0",
+    "esbuild": "^0.20.1",
+    "tsx": "^4.23.12",
+    "typescript": "^5.3.3"
+  }
+}
